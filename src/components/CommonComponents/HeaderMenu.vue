@@ -1,15 +1,20 @@
 <template>
   <ul class="list-link">
-    <router-link to="/" class="link">
+    <router-link to="/" class="link-main">
       Головна
     </router-link>
-    <router-link
-        class="link"
-        v-for="i in categories"
-        :key="i.id"
-        @click="checkCategory(i)"
-        :to="{ name:'detail-category', params:{ slug: i.slug }}"
-    >{{ i.name }}</router-link>
+    <div class="dropdown">
+      <span>Категорії</span>
+      <div class="links">
+        <router-link
+            v-for="i in categories"
+            class="link"
+            @click="checkCategory(i)"
+            :key="i.id"
+            :to="{ name:'detail-category', params:{ slug: i.slug }}"
+        >{{ i.name }}</router-link>
+      </div>
+    </div>
   </ul>
 </template>
 
@@ -19,7 +24,7 @@ import http from "@/http/index";
 import { mapActions } from 'vuex'
 
 export default {
-  name: "HeaderCategories",
+  name: "HeaderMenu",
   data(){
     return{
       categories: []
@@ -46,12 +51,31 @@ export default {
   display: flex;
   justify-content: space-around;
 }
-.link{
+.link-main{
   color: black;
   text-decoration: none;
 }
-.link:hover{
+.link{
+  display: block;
+  padding-bottom: 5px;
+  color: black;
+  text-decoration: none;
+}
+.link:hover, .link-main:hover{
   color: blue;
   cursor: pointer;
+}
+.dropdown{
+  position: relative;
+}
+.links{
+  position: absolute;
+  display: none;
+  background: grey;
+  padding: 15px;
+
+}
+.dropdown:hover .links{
+  display: block;
 }
 </style>

@@ -1,26 +1,30 @@
 <template>
   <div>
-    <div v-for="item in list_product" :key="item.id">
-      {{ item }}
+    <div v-if="list_product">
+      <div v-for="item in list_product" :key="item.id">
+        <router-link :to="{ name:'product-detail', params:{slug: item.slug} }">
+          {{ item.title }}
+        </router-link>
+      </div>
+    </div>
+    <div v-if="!list_product.length">
+      Товарів немає
     </div>
   </div>
 </template>
 
 <script>
 
-import http from '@/http/index'
-import { mapState } from 'vuex'
+import http from '@/http'
 
 export default {
-  name: "DetaillCategory",
+  name: "DetailCategoryProducts",
   data(){
     return{
       list_product: [],
-      urlPath: this.$route.params.slug
     }
   },
   created() {
-    this.getProduct(this.urlPath)
     this.$store.watch((state) => {
       this.getProduct(state.selectedCategory.slug)
     })
@@ -31,10 +35,7 @@ export default {
       this.list_product = response.data.results
       console.log(this.list_product)
     }
-  },
-  computed:{
-    ...mapState(['selectedCategory'])
-  },
+  }
 }
 </script>
 

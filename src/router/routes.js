@@ -12,8 +12,13 @@ const routes = [
           {
               path: '/detail-categories/:slug',
               name:'detail-category',
-              component: () => import('@/views/DetaillCategory')
+              component: () => import('@/views/Product/DetailCategoryProducts')
           },
+          {
+              path:'/detail-Product/:slug',
+              name:'product-detail',
+              component: () => import('@/views/Product/DetailProduct')
+          }
       ]
     },
     {

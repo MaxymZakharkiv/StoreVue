@@ -1,6 +1,8 @@
 <template>
   <div v-for="product in products" :key="product.id">
-    {{ product }}
+    <router-link :to="{ name:'product-detail', params:{slug: product.slug} }">
+      {{ product.title }}
+    </router-link>
   </div>
 </template>
 

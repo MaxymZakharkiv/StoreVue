@@ -5,7 +5,7 @@
 
 <script>
 
-import HeaderCategories from "@/components/CommonComponents/HeaderCategories";
+import HeaderCategories from "@/components/CommonComponents/HeaderMenu";
 
 export default {
   name: "CommonLayout",
