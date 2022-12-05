@@ -4,6 +4,10 @@
       {{ product.title }}
     </router-link>
   </div>
+  <div class="pagination">
+    <button @click="previewsPage">Назад</button>
+    <button @click="nextPage">Вперед</button>
+  </div>
 </template>
 
 <script>
@@ -14,16 +18,30 @@ export default {
   name: "MainPage",
   data(){
     return{
-      products: []
+      products: [],
+      offset:0
     }
   },
   created() {
     this.getProducts()
   },
   methods:{
-    async getProducts(){
-      const response = await http.get('shop/product/')
+    async getProducts(offset=0){
+      const response = await http.get('shop/product/', {params: {offset:offset}})
       this.products = response.data.results
+    },
+    nextPage(){
+      this.offset += 3
+      this.getProducts(this.offset)
+    },
+    previewsPage(){
+      this.offset -= 3
+      if(this.offset >= 0){
+        this.getProducts(this.offset)
+      } else {
+        this.offset = 0
+        this.getProducts()
+      }
     }
   }
 }

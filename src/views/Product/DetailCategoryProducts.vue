@@ -10,6 +10,10 @@
     <div v-if="!list_product.length">
       Товарів немає
     </div>
+    <div class="pagination">
+      <button @click="previewsPage">Назад</button>
+      <button @click="nextPage">Вперед</button>
+    </div>
   </div>
 </template>
 
@@ -22,18 +26,31 @@ export default {
   data(){
     return{
       list_product: [],
+      offset:0
     }
   },
   created() {
     this.$store.watch((state) => {
-      this.getProduct(state.selectedCategory.slug)
+      if(!state.selectedCategory){
+        this.getProduct(this.$route.params.slug)
+      } else {
+        this.getProduct(state.selectedCategory.slug)
+      }
     })
   },
   methods:{
     async getProduct(url){
-      const response = await http.get(`shop/product/category/${url}/`)
-      this.list_product = response.data.results
-      console.log(this.list_product)
+      const response = await http.get(`shop/product/category/${url}/`, {params:{offset:this.offset}})
+      this.list_product = await response.data.results
+    },
+    nextPage(){
+      this.offset += 3
+    },
+    previewsPage(){
+      this.offset -= 3
+      if(this.offset < 0){
+        this.offset = 0
+      }
     }
   }
 }

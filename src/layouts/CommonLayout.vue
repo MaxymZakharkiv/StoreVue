@@ -11,7 +11,7 @@ export default {
   name: "CommonLayout",
   components:{
     HeaderCategories
-  }
+  },
 }
 </script>
 
