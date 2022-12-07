@@ -15,6 +15,7 @@
         >{{ i.name }}</router-link>
       </div>
     </div>
+    <router-link class="cart" :to="{name:'cart'}">Корзина</router-link>
   </ul>
 </template>
 
@@ -77,5 +78,12 @@ export default {
 }
 .dropdown:hover .links{
   display: block;
+}
+.cart{
+  text-decoration: none;
+  color: black;
+}
+.cart:hover{
+  color: blue
 }
 </style>
