@@ -1,15 +1,10 @@
 import http from "@/http";
 
 
-const getItems = (url) => {
-    return http.get(url)
+export const getItems = (url, offset) => {
+    return http.get(url, {params:{offset: offset}})
 }
 
-const getDetailItems = (url, params) => {
+export const getDetailItems = (url, params) => {
     return http.get(url+`${params}/`)
-}
-
-
-export default {
-    getItems, getDetailItems
 }

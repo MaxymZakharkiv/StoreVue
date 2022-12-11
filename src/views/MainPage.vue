@@ -1,5 +1,5 @@
 <template>
-  <div v-for="product in products" :key="product.id">
+  <div v-for="product in getProductState" :key="product.id">
     <router-link :to="{ name:'product-detail', params:{slug: product.slug} }">
       {{ product.id }} {{ product.title }} {{ product.count_on_stock }}
     </router-link>
@@ -14,6 +14,7 @@
 <script>
 
 import http from "@/http/index";
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: "MainPage",
@@ -24,28 +25,27 @@ export default {
     }
   },
   created() {
-    this.getProducts()
+    this.getProduct()
+  },
+  computed:{
+    ...mapGetters('product', ['getProductState'])
   },
   methods:{
+    ...mapActions("product", ["getProduct"]),
     async addToCart(id){
-      const response = await http.post(`shop/cart/add-to-cart/${id}/`)
-      console.log(response)
-    },
-    async getProducts(offset=0){
-      const response = await http.get('shop/product/', {params: {offset:offset}})
-      this.products = response.data.results
+      await http.post(`shop/cart/add-to-cart/${id}/`)
     },
     nextPage(){
       this.offset += 3
-      this.getProducts(this.offset)
+      this.getProduct(this.offset)
     },
     previewsPage(){
       this.offset -= 3
       if(this.offset >= 0){
-        this.getProducts(this.offset)
+        this.getProduct(this.offset)
       } else {
         this.offset = 0
-        this.getProducts()
+        this.getProduct()
       }
     }
   }

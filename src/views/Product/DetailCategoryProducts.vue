@@ -1,25 +1,32 @@
 <template>
   <div>
-    <div v-if="list_product">
-      <div v-for="item in list_product" :key="item.id">
-        <router-link :to="{ name:'product-detail', params:{slug: item.slug} }">
-          {{ item.title }}
-        </router-link>
+    <template v-if="getIsLoading">
+      Loading...
+    </template>
+    <template v-else>
+      <div v-if="list_product">
+        <div v-for="item in getProductState" :key="item.id">
+          <router-link :to="{ name:'product-detail', params:{slug: item.slug} }">
+            {{ item.title }}
+          </router-link>
+        </div>
       </div>
-    </div>
-    <div v-if="!list_product.length">
-      Товарів немає
-    </div>
-    <div class="pagination">
-      <button @click="previewsPage">Назад</button>
-      <button @click="nextPage">Вперед</button>
-    </div>
+      <div v-if="!list_product.length">
+        Товарів немає
+      </div>
+      <div class="pagination">
+        <button @click="previewsPage">Назад</button>
+        <button @click="nextPage">Вперед</button>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
 
-import http from '@/http'
+// import http from '@/http'
+
+import {mapGetters, mapActions} from "vuex";
 
 export default {
   name: "DetailCategoryProducts",
@@ -29,20 +36,17 @@ export default {
       offset:0
     }
   },
-  created() {
-    this.$store.watch((state) => {
-      if(!state.selectedCategory){
-        this.getProduct(this.$route.params.slug)
-      } else {
-        this.getProduct(state.selectedCategory.slug)
-      }
-    })
+  computed:{
+    ...mapGetters('product', [
+        'getProductState',
+        'getIsLoading'
+    ]),
+    getUrlParams(){
+      return this.$route.params.slug
+    }
   },
   methods:{
-    async getProduct(url){
-      const response = await http.get(`shop/product/category/${url}/`, {params:{offset:this.offset}})
-      this.list_product = await response.data.results
-    },
+    ...mapActions('product', ['getDetailProduct']),
     nextPage(){
       this.offset += 3
     },
@@ -51,6 +55,11 @@ export default {
       if(this.offset < 0){
         this.offset = 0
       }
+    }
+  },
+  watch:{
+    getUrlParams(val){
+      this.getDetailProduct(val)
     }
   }
 }
