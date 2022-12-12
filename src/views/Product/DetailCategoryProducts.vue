@@ -11,7 +11,7 @@
           </router-link>
         </div>
       </div>
-      <div v-if="!list_product.length">
+      <div v-else>
         Товарів немає
       </div>
       <div class="pagination">
@@ -23,8 +23,6 @@
 </template>
 
 <script>
-
-// import http from '@/http'
 
 import {mapGetters, mapActions} from "vuex";
 
@@ -45,6 +43,9 @@ export default {
       return this.$route.params.slug
     }
   },
+  created() {
+    this.getDetailProduct({category: this.getUrlParams, offset:this.offset})
+  },
   methods:{
     ...mapActions('product', ['getDetailProduct']),
     nextPage(){
@@ -52,14 +53,18 @@ export default {
     },
     previewsPage(){
       this.offset -= 3
-      if(this.offset < 0){
-        this.offset = 0
-      }
     }
   },
   watch:{
+    offset(val){
+      if(val < 0){
+        this.offset = 0
+      }
+      this.getDetailProduct({category: this.getUrlParams, offset: this.offset})
+    },
     getUrlParams(val){
-      this.getDetailProduct(val)
+      if(!val) return
+      this.getDetailProduct({category: val, offset:0})
     }
   }
 }

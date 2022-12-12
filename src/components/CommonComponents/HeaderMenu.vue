@@ -9,7 +9,6 @@
         <router-link
             v-for="i in categories"
             class="link"
-            @click="checkCategory(i)"
             :key="i.id"
             :to="{ name:'detail-category', params:{ slug: i.slug }}"
         >{{ i.name }}</router-link>
@@ -22,7 +21,6 @@
 <script>
 
 import http from "@/http/index";
-import { mapActions } from 'vuex'
 
 export default {
   name: "HeaderMenu",
@@ -35,13 +33,9 @@ export default {
     this.getCategories()
   },
   methods:{
-    ...mapActions(['changeCategory']),
     async getCategories(){
       const response = await http.get('shop/categories/')
       this.categories = response.data
-    },
-    checkCategory(data){
-      this.changeCategory(data)
     }
   },
 }

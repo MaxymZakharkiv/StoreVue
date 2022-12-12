@@ -1,5 +1,4 @@
-import {getDetailItems, getItems} from "@/api/product/requests";
-import {GET_PRODUCTS, GET_PRODUCTS_BY_CATEGORIES} from "@/api/product/urls";
+import {getItems, getDetailItems} from '@/api/product'
 
 
 const productModule = {
@@ -24,7 +23,7 @@ const productModule = {
         async getProduct({commit}, offset=0) {
             try {
                 commit('LOADING', true)
-                const response = await getItems(GET_PRODUCTS, offset)
+                const response = await getItems(offset)
                 commit('GET_PRODUCT', response.data.results)
                 commit('LOADING', false)
             } catch (e) {
@@ -32,11 +31,11 @@ const productModule = {
                 commit('ERROR_LIST', e)
             }
         },
-        async getDetailProduct({commit}, category){
-            console.log(category)
+        async getDetailProduct({ commit }, data){
+            console.log(data)
             try {
                 commit('LOADING', true)
-                const response = await getDetailItems(GET_PRODUCTS_BY_CATEGORIES, category)
+                const response = await getDetailItems(data.category, data.offset)
                 commit('GET_PRODUCT', response.data.results)
                 commit('LOADING', false)
             } catch (e) {
