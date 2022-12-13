@@ -16,7 +16,7 @@
       </div>
     </div>
     <div v-else>
-      <p>Товарів немає</p>
+      <NoProduct/>
     </div>
   </template>
 </template>
@@ -26,8 +26,13 @@
 import http from "@/http/index";
 import {mapActions, mapGetters} from 'vuex'
 
+import NoProduct from "@/components/CommonComponents/NoProduct";
+
 export default {
   name: "MainPage",
+  components:{
+    NoProduct
+  },
   data(){
     return{
       products: [],

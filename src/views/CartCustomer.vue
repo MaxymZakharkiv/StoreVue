@@ -1,15 +1,15 @@
 <template>
   <div>
-    <template v-if="cart_products.length > 0">
-      <p v-for="item in cart_products" :key="item.id">
+    <template v-if="getCartCustomer.length > 0">
+      <p v-for="item in getCartCustomer" :key="item.id">
         <CartProduct
             :product="item"
             @plusGoods="plusGoods"
             @minusGoods="minusGoods"
-            @deleteProductFromCart="deleteProductFromCart"
+            @deleteProductFromCart="removeProductFromCart"
         />
       </p>
-      <p>total price {{ total_sum }}</p>
+      <p>total price {{ getTotalPrice }}</p>
     </template>
     <template v-else>
       Корзина пуста
@@ -18,10 +18,9 @@
 </template>
 
 <script>
-
-import http from "@/http";
-
 import CartProduct from "@/components/CartProduct";
+
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: "CartCustomer",
@@ -30,32 +29,28 @@ export default {
   },
   data(){
     return{
-      cart_products: null,
+      cart_products: [],
       total_sum: 0,
     }
+  },
+  computed:{
+    ...mapGetters("cart", ["getCartCustomer", "getTotalPrice"])
   },
   created() {
     this.getCart()
   },
   methods:{
-    async getCart(){
-      const response = await http.get('shop/cart/get_current_cart_customer/')
-      this.cart_products = response.data.products
-      this.total_sum = this.cart_products.reduce((sum, item) => {
-        return sum + ++item.all_price
-      }, 0)
+    ...mapActions("cart", ["getCart", "changeCountProduct", "deleteProductFromCart"]),
+    minusGoods({id, count_product, price}){
+      price = -Number(price)
+      this.changeCountProduct({id, count_product, price})
     },
-    async minusGoods({id, count_product, price}){
-      await http.patch(`shop/cart/change-count-cart-product/${id}/${count_product}/`)
-      this.total_sum -= ++price
+     plusGoods({id, count_product, price}){
+      price = Number(price)
+      this.changeCountProduct({id, count_product, price})
     },
-    async plusGoods({id, count_product, price}){
-      await http.patch(`shop/cart/change-count-cart-product/${id}/${count_product}/`)
-      this.total_sum += ++price
-    },
-    async deleteProductFromCart(id){
-      await http.post(`shop/cart/delete-from-cart/${id}/`)
-      this.cart_products = this.cart_products.filter(i => i.id !== id)
+    removeProductFromCart(id){
+      this.deleteProductFromCart(id)
     }
   }
 }

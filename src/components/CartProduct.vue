@@ -5,7 +5,7 @@
     {{ product.product.price }}
     <br>
     {{ count_product }}
-    <button @click="minusGoods">-</button>
+    <button @click="minusGoods" :disabled="disableButtonMinus">-</button>
     <button @click="plusGoods">+</button>
     <br>
     <button @click="deleteProductFromCart(product.id, )">Delete product</button>
@@ -27,11 +27,13 @@ export default {
       count_product: this.product.count
     }
   },
+  computed:{
+    disableButtonMinus(){
+      return this.count_product === 1
+    }
+  },
   methods:{
     minusGoods(){
-      if(this.count_product === 1){
-        return
-      }
       this.count_product--
       this.$emit('minusGoods', {id:this.product.id, count_product: this.count_product, price: this.product.product.price})
     },
@@ -42,7 +44,7 @@ export default {
     deleteProductFromCart(id){
       this.$emit('deleteProductFromCart', id)
     }
-  }
+  },
 }
 </script>
 

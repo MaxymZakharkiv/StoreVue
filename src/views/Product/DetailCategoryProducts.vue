@@ -4,19 +4,19 @@
       Loading...
     </template>
     <template v-else>
-      <div v-if="list_product">
+      <div v-if="getProductState.length">
         <div v-for="item in getProductState" :key="item.id">
           <router-link :to="{ name:'product-detail', params:{slug: item.slug} }">
             {{ item.title }}
           </router-link>
         </div>
+        <div class="pagination">
+          <button @click="previewsPage">Назад</button>
+          <button @click="nextPage">Вперед</button>
+        </div>
       </div>
       <div v-else>
-        Товарів немає
-      </div>
-      <div class="pagination">
-        <button @click="previewsPage">Назад</button>
-        <button @click="nextPage">Вперед</button>
+        <NoProduct/>
       </div>
     </template>
   </div>
@@ -26,11 +26,15 @@
 
 import {mapGetters, mapActions} from "vuex";
 
+import NoProduct from "@/components/CommonComponents/NoProduct";
+
 export default {
   name: "DetailCategoryProducts",
+  components:{
+    NoProduct
+  },
   data(){
     return{
-      list_product: [],
       offset:0
     }
   },

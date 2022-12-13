@@ -3,10 +3,6 @@
     <div>
       <input placeholder="enter login" v-model="dataAuth.username">
     </div>
-<!--    <div class="block-password">-->
-<!--      <span @click="showPassword=!showPassword">{{ showPassword ? 'показати' : 'приховати' }} пароль</span>-->
-<!--      <input class="password" :type="showPassword ? 'password' : 'text'" placeholder="enter password" v-model="password">-->
-<!--    </div>-->
     <div class="block-password">
       <input type="text" placeholder="enter password" v-model="dataAuth.password">
     </div>
@@ -18,7 +14,7 @@
 
 <script>
 
-import http from "@/http";
+import {mapActions} from 'vuex'
 
 export default {
   name: "SignIn",
@@ -32,11 +28,9 @@ export default {
     }
   },
   methods:{
-    async authUser(){
-      const response = await http.post('auth/jwt/jwt/create/', this.dataAuth)
-      console.log(response)
-      localStorage.setItem('access_token', response.data.access)
-      localStorage.setItem('refresh_token', response.data.refresh)
+    ...mapActions('auth', ['signInUser']),
+    authUser(){
+      this.signInUser(this.dataAuth)
       this.$router.push({name:'main-page'})
     }
   }
