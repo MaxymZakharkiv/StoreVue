@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import CartProduct from "@/components/CartProduct";
+import CartProduct from "@/components/DetailProduct";
 
 import {mapActions, mapGetters} from 'vuex'
 

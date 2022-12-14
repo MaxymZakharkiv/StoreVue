@@ -1,4 +1,4 @@
-import {getCart, changeCountGoods, deleteGoods} from '@/api/cart'
+import {getCart, addGoods, changeCountGoods, deleteGoods} from '@/api/cart'
 
 
 const cartModule = {
@@ -6,7 +6,7 @@ const cartModule = {
     state:{
         isLoading: false,
         error: [],
-        cart_products: null,
+        cart_products: [],
         total_price: 0
     },
     mutations:{
@@ -21,6 +21,9 @@ const cartModule = {
         },
         LOADING(state, bool){
             state.isLoading = bool
+        },
+        ADD_TO_CART(state, product){
+            state.cart_products.push(product)
         },
         DELETE_GOODS_FORM_CART(state, id){
             state.cart_products = state.cart_products.filter(i => i.id !== id)
@@ -39,6 +42,16 @@ const cartModule = {
                     return sum + Number(item.all_price)
                 }, 0)
                 commit('CHANGE_TOTAL_PRICE', sum)
+                commit('LOADING', false)
+            } catch (e) {
+                commit('ERROR_CART', e)
+            }
+        },
+        async addToCart({commit}, product){
+            try{
+                commit('LOADING', true)
+                await addGoods(product.id)
+                commit('ADD_TO_CART', product)
                 commit('LOADING', false)
             } catch (e) {
                 commit('ERROR_CART', e)

@@ -24,6 +24,7 @@ const productModule = {
             try {
                 commit('LOADING', true)
                 const response = await getItems(offset)
+                console.log(response.data.results)
                 commit('GET_PRODUCT', response.data.results)
                 commit('LOADING', false)
             } catch (e) {
