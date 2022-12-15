@@ -6,9 +6,7 @@
     <template v-else>
       <div v-if="getProductState.length">
         <div v-for="item in getProductState" :key="item.id">
-          <router-link :to="{ name:'product-detail', params:{slug: item.slug} }">
-            {{ item.title }}
-          </router-link>
+          <CartProduct :product="item" @addToCart="addToCartProduct"/>
         </div>
         <div class="pagination">
           <button @click="previewsPage">Назад</button>
@@ -27,11 +25,12 @@
 import {mapGetters, mapActions} from "vuex";
 
 import NoProduct from "@/components/CommonComponents/NoProduct";
+import CartProduct from "@/components/CartProduct";
 
 export default {
   name: "DetailCategoryProducts",
   components:{
-    NoProduct
+    NoProduct, CartProduct
   },
   data(){
     return{
@@ -43,6 +42,7 @@ export default {
         'getProductState',
         'getIsLoading'
     ]),
+    ...mapGetters('cart', ['getTotalPrice']),
     getUrlParams(){
       return this.$route.params.slug
     }
@@ -52,6 +52,9 @@ export default {
   },
   methods:{
     ...mapActions('product', ['getDetailProduct']),
+    addToCartProduct(product){
+      this.addToCart(product)
+    },
     nextPage(){
       this.offset += 3
     },

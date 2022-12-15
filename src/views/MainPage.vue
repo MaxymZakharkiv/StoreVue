@@ -6,10 +6,6 @@
     <div v-if="getProductState.length">
       <div v-for="product in getProductState" :key="product.id">
         <CartProduct :product="product" @addToCart="addToCartProduct"/>
-<!--        <router-link :to="{ name:'product-detail', params:{slug: product.slug} }">-->
-<!--          {{ product.id }} {{ product.title }} {{ product.count_on_stock }}-->
-<!--        </router-link>-->
-<!--        <button class="btn-add-to-cart" @click="addToCart(product.id)" :disabled="!product.count_on_stock">{{ !product.count_on_stock ? 'Товар відсутній на складі' : 'Додати в корзину' }}</button>-->
       </div>
       <div class="pagination">
         <button @click="previewsPage" :disabled="disableButtonPrev">Назад</button>
@@ -24,7 +20,6 @@
 
 <script>
 
-// import http from "@/http/index";
 import {mapActions, mapGetters} from 'vuex'
 
 import NoProduct from "@/components/CommonComponents/NoProduct";
@@ -54,9 +49,7 @@ export default {
     ...mapActions("product", ["getProduct"]),
     ...mapActions('cart', ["addToCart"]),
     addToCartProduct(product){
-      console.log(product)
       this.addToCart(product)
-      // await http.post(`shop/cart/add-to-cart/${id}/`)
     },
     nextPage(){
       this.offset += 3

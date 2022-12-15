@@ -15,6 +15,9 @@ const cartModule = {
         },
         GET_CART_CUSTOMER(state, cart){
             state.cart_products = cart
+            state.total_price =  cart.reduce((sum, product) => {
+                return sum + Number(product.all_price)
+            }, 0)
         },
         ERROR_CART(state, error){
             state.error = error
@@ -37,11 +40,8 @@ const cartModule = {
             try{
                 commit('LOADING', true)
                 const response = await getCart()
+                console.log(response)
                 commit('GET_CART_CUSTOMER', response.data.products)
-                let sum = response.data.products.reduce((sum, item) => {
-                    return sum + Number(item.all_price)
-                }, 0)
-                commit('CHANGE_TOTAL_PRICE', sum)
                 commit('LOADING', false)
             } catch (e) {
                 commit('ERROR_CART', e)
@@ -79,11 +79,11 @@ const cartModule = {
         }
     },
     getters:{
-        getTotalPrice(state){
-            return state.total_price
-        },
         getCartCustomer(state){
             return state.cart_products
+        },
+        getTotalPrice(state){
+            return state.total_price
         }
     }
 }

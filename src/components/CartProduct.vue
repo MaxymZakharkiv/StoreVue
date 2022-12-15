@@ -1,19 +1,14 @@
 <template>
   <div>
-    {{ product.id }}
-    {{ product.product.title }}
-    {{ product.product.price }}
-    <br>
-    {{ count_product }}
-    <button @click="minusGoods" :disabled="disableButtonMinus">-</button>
-    <button @click="plusGoods">+</button>
-    <br>
-    <button @click="deleteProductFromCart(product.id, )">Delete product</button>
+    {{ product.category.name }}
+    {{ product.title }}
+    {{ product.price }}
+    <router-link :to="{ name:'product-detail', params:{slug: product.slug} }">Детальніше</router-link>
+    <button @click="addToCart(product)" :disabled="!product.count_on_stock || inCart">{{ inCart ? 'Товар в корзині' : setCaptionButton }}</button>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "CartProduct",
   props:{
@@ -24,27 +19,20 @@ export default {
   },
   data(){
     return{
-      count_product: this.product.count
+      inCart: false
     }
   },
   computed:{
-    disableButtonMinus(){
-      return this.count_product === 1
+    setCaptionButton(){
+      return !this.product.count_on_stock ? 'Товар відсутній на складі' : 'Додати в корзину'
     }
   },
   methods:{
-    minusGoods(){
-      this.count_product--
-      this.$emit('minusGoods', {id:this.product.id, count_product: this.count_product, price: this.product.product.price})
-    },
-    plusGoods(){
-      this.count_product++
-      this.$emit('plusGoods', {id: this.product.id, count_product: this.count_product, price: this.product.product.price})
-    },
-    deleteProductFromCart(id){
-      this.$emit('deleteProductFromCart', id)
+    addToCart(product){
+      this.$emit('addToCart', product)
+      this.inCart = true
     }
-  },
+  }
 }
 </script>
 
