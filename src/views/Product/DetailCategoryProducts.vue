@@ -1,11 +1,11 @@
 <template>
   <div>
-    <template v-if="getIsLoading">
+    <template v-if="isLoading">
       Loading...
     </template>
     <template v-else>
-      <div v-if="getProductState.length">
-        <div v-for="item in getProductState" :key="item.id">
+      <div v-if="products.length">
+        <div v-for="item in products" :key="item.id">
           <CartProduct :product="item" @addToCart="addToCartProduct"/>
         </div>
         <div class="pagination">
@@ -22,7 +22,7 @@
 
 <script>
 
-import {mapGetters, mapActions} from "vuex";
+import {mapState, mapGetters, mapActions} from "vuex";
 
 import NoProduct from "@/components/CommonComponents/NoProduct";
 import CartProduct from "@/components/CartProduct";
@@ -38,9 +38,9 @@ export default {
     }
   },
   computed:{
-    ...mapGetters('product', [
-        'getProductState',
-        'getIsLoading'
+    ...mapState('product', [
+        'products',
+        'isLoading'
     ]),
     ...mapGetters('cart', ['getTotalPrice']),
     getUrlParams(){

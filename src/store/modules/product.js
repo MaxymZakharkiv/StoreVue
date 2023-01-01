@@ -4,7 +4,7 @@ import {getItems, getDetailItems} from '@/api/product'
 const productModule = {
     namespaced: true,
     state:{
-        product:[],
+        products:[],
         isLoading: false,
         error:[]
     },
@@ -12,8 +12,8 @@ const productModule = {
         LOADING(state, bool){
           state.isLoading = bool
         },
-        GET_PRODUCT(state, product){
-            state.product = product
+        GET_PRODUCT(state, products){
+            state.products = products
         },
         ERROR_LIST(state, error){
             state.error = error
@@ -45,14 +45,7 @@ const productModule = {
             }
         }
     },
-    getters:{
-        getProductState(state){
-            return state.product
-        },
-        getIsLoading(state){
-            return state.isLoading
-        }
-    }
+    getters:{}
 }
 
 
